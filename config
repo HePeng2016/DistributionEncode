@@ -1,0 +1,4 @@
+Tolerance = 0.01
+VectorSize =   4096
+RBFThreshold = 0.2
+
