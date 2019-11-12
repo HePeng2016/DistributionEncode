@@ -1,5 +1,6 @@
 # DistributionEncode
-#Dependencies
+
+# Dependencies
   Armadillo package and mlpack package are necessary. 
 
 
