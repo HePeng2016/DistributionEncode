@@ -2,7 +2,7 @@
 
   The input file format is csv. A delimited text file that uses a comma to separate values without any head name and row name.
  
-  Each group contain many entries(such as cells), each entry assign an entry ID. each entry has many attribute values(such as gene expression).
+  Each group contain many entries(such as cells), each entry assign an entry ID. Each entry has many attribute values(such as gene expression).
  
  The first column is the group ID, the second column is entry ID, remaining columns are the atrribute values(genes expressions in each cell).
  
