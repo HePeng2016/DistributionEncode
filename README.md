@@ -3,7 +3,7 @@
 # Dependencies
   Armadillo package and mlpack package are necessary. 
 
-
+# 
   The input file format is csv. A delimited text file that uses a comma to separate values without any head name and row name.
  
   Each group contain many entries(such as cells), each entry assign an entry ID. Each entry has many attribute values(such as gene expression).
