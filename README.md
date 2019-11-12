@@ -3,6 +3,7 @@
 # Dependencies
   Armadillo package and mlpack package are necessary. 
 # Compile
+     make
   The execute file will be generated.
 
 # Input file format 
