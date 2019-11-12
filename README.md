@@ -1,4 +1,7 @@
 # DistributionEncode
+# Dependencies
+  Armadillo package and mlpack package are necessary. 
+
 
   The input file format is csv. A delimited text file that uses a comma to separate values without any head name and row name.
  
