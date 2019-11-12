@@ -11,7 +11,7 @@
  
   Each group contain many entries(such as cells), each entry assign an entry ID. Each entry has many attribute values(such as gene expression).
  
- The first column is the group ID, the second column is entry ID, remaining columns are the atrribute values(genes expressions in each cell).
+ The first column is the group ID, the second column is entry ID, remaining columns are the atrribute values(such as genes expressions in each cell).
  
  group ID  entry ID  atrribute value1  atrribute value2   ...  atrribute valueN ...
  
@@ -41,7 +41,9 @@
     .........
    # Comands
    
-   
+      ./DistributionEncode Encode InputFile Outputfile 
+      
+  InputFile is a csv file described in the "Input the file format" section. The output is table with the number of columns N and the number of rows M. N is the number of orthognal basis functions, M = n\*m n is the number of samples and m is the number of attribute(genes) in each sample.  
    
    
    
