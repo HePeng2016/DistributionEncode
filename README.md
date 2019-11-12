@@ -43,14 +43,14 @@
    
       ./DistributionEncode Encode InputFile Outputfile 
       
-  InputFile is a csv file described in the "Input the file format" section. The output is a table with the number of columns N and the number of rows M. N is the number of orthognal basis functions, M = n\*m n is the number of samples and m is the number of attributes (such as genes) in each sample.  Each line of this table is a vector represent the entries distribution for an attribute of a sample. n lines are as a group with have the same attribute.
+  InputFile is a csv file described in the "Input the file format" section. The output is a table with the number of columns N and the number of rows M. N is the number of orthognal basis functions, M = n\*m n is the number of samples and m is the number of attributes (such as genes).  Each line of this table is a vector represent the entries distribution for an attribute of a sample. n lines are as a group with have the same attribute.
   
   
    
     ./DistributionEncode RBFEncode InputFile Outputfile [ComponentsNumber]
     
   InputFile is a csv file described in the "Input the file format" section. ComponentsNumber is an integer indicating the number of consider components. If this parameter is specified, the output is a table with the number of columns N and the number of rows M.
-N is the number of consider components. M = n\*m n is the number of samples and m is the number of attributes (such as genes) in each sample.Each line of this table is the vector of components represent the distribution of entries for an attribute of a sample. n lines are as a group with have the same attribute.     
+N is the number of consider components. M = n\*m n is the number of samples and m is the number of attributes (such as genes) in each sample. Each line of this table is the vector of components represent the distribution of entries for an attribute of a sample. n lines are as a group with have the same attribute.     
  If ComponentsNumber parameter is not specified, the output is not a regular table, each line has different columns(the length of vector is variable). But lines belong to the same attribute have the same column.
  
  
