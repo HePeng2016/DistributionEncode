@@ -2,8 +2,8 @@
 
 # Dependencies
   Armadillo package and mlpack package are necessary. 
-# compile
-The execute file will be generated.
+# Compile
+  The execute file will be generated.
 
 # Input file format 
   The input file format is csv. A delimited text file that uses a comma to separate values without any head name and row name.
