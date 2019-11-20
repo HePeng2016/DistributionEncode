@@ -188,11 +188,22 @@ for(int i =0;i<argc;i++)
         if(argv[i+1]==NULL||argv[i+2]==NULL)
         {
            printf("PairwiseGenotype InputFile Outputfile \n");
-           printf("PairwiseGenotype -m InputFile Outputfile \n");
+           printf("PairwiseGenotype -s N InputFile Outputfile \n");
            return 0;
         }
 
         mat InputM;
+
+
+        int SampleN;
+        if( strcmp(argv[i+1],"-s")==0)
+        {
+           SampleN = atoi(argv[i+2]);
+           Test.IsRead = true;
+           i=i+2;
+        }
+
+
 
         if(InputM.load(argv[i+1],csv_ascii)==false)
         {
@@ -207,7 +218,12 @@ for(int i =0;i<argc;i++)
            printf("The output File cannot be created.\n");
            return 0;
        }
+
+       if(Test.IsRead==false)
        Test.PairwiseEncode(InputM,ip2,K);
+       else
+       Test.PairwiseEncode(InputM,ip2,SampleN);
+
        fclose(ip2);
        return 0;
   }
@@ -217,11 +233,19 @@ for(int i =0;i<argc;i++)
         if(argv[i+1]==NULL||argv[i+2]==NULL)
         {
            printf("RBFEncode InputFile Outputfile [ComponentsNumber]\n");
-           printf("RBFEncode -m InputFile Outputfile [ComponentsNumber]\n");
+           printf("RBFEncode -s N InputFile Outputfile [ComponentsNumber]\n");
            return 0;
         }
 
         mat InputM;
+
+        int SampleN;
+        if( strcmp(argv[i+1],"-s")==0)
+        {
+           SampleN = atoi(argv[i+2]);
+           Test.IsRead = true;
+           i=i+2;
+        }
         if( InputM.load(argv[i+1],csv_ascii) ==false)
         {
            printf("The Input File cannot be loaded as a matrix.\n");
@@ -242,7 +266,10 @@ for(int i =0;i<argc;i++)
          compsN = atoi(argv[i+3]);
          else
          compsN = -1;
+        if(Test.IsRead==false)
         Test.RBFEncode(InputM,ip2,K,compsN);
+        else
+        Test.RBFEncode(InputM,ip2,SampleN,compsN);
         fclose(ip2);
         return 0;
     }
@@ -284,6 +311,3 @@ for(int i =0;i<argc;i++)
 
 
 }
-
-
-
