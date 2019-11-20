@@ -256,14 +256,26 @@ void DistributionEncode::PairwiseGenotype(FILE * Input,FILE * Output)
 void DistributionEncode::PairwiseEncode(mat&InputM,FILE * Output,int K)
 {
 
-
-
-
-
+       if(k<0)
+       {
+       
+	       
+	    for(int  i=0;i<InputM.n_rows;i++)
+            {
+                for(int j =0;j<i;j++)
+                {
+                  double x=norm((InputM.row(j) - InputM.row(i)),2);
+                  fprintf(Output,"%lf\t",x);
+                }
+            }
+                fprintf(Output,"\n");
+	        return；
+       }
+	
         double SampleID = InputM(InputM.n_rows-1,0);
         double CellID = InputM(InputM.n_rows-1,1);
         sp_mat EnergyMatrix;
-        mat OutputM;
+        
 
         EnergyMatrix.resize((SampleID),(CellID));
         clusterResult.resize(InputM.n_rows);
@@ -315,11 +327,14 @@ void DistributionEncode::PairwiseEncode(mat&InputM,FILE * Output,int K)
 void DistributionEncode::RBFEncode( mat&InputM,FILE * Output,int K,int CompsN )
 {
 
-        mat OutputM;
-
-        double SampleID = InputM(InputM.n_rows-1,0);
-        double CellID = InputM(InputM.n_rows-1,1);
-
+	mat KernalM;
+	
+	if(K>=0)
+	{
+		
+         double SampleID = InputM(InputM.n_rows-1,0);
+         double CellID = InputM(InputM.n_rows-1,1);
+         mat OutputM;
 
         sp_mat EnergyMatrix;
         EnergyMatrix.resize((SampleID),(CellID));
@@ -337,7 +352,7 @@ void DistributionEncode::RBFEncode( mat&InputM,FILE * Output,int K,int CompsN )
 
          vec eigval;
          mat eigvec;
-         mat KernalM;
+        
          double Comps =3;
          eigvec.resize(EnergyMatrix.n_rows,Comps);
          KernalM.resize(EnergyMatrix.n_rows,EnergyMatrix.n_rows);
@@ -366,7 +381,7 @@ void DistributionEncode::RBFEncode( mat&InputM,FILE * Output,int K,int CompsN )
                 }
             }
 
-
+	}
             for(int  i=0;i<GraphEncodeList.size();i++)
             {
                 for(int j =0;j<i;j++)
@@ -377,7 +392,22 @@ void DistributionEncode::RBFEncode( mat&InputM,FILE * Output,int K,int CompsN )
                   KernalM(j,i)=x;
                 }
             }
-
+	}else{
+	
+            for(int  i=0;i<InputM.n_rows;i++)
+            {
+                for(int j =0;j<i;j++)
+                {
+                  double x=sum(square(InputM.row(j) - InputM.row(i)));
+                  x=exp(x*(-0.5));
+                  KernalM(i,j)=x;
+                  KernalM(j,i)=x;
+                }
+            }
+	}
+	
+	
+	
                eig_sym(eigval,eigvec,KernalM);
 
                if(CompsN>0)
