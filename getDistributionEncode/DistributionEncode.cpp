@@ -451,7 +451,7 @@ void DistributionEncode::Encode(mat&InputM,FILE * Output,int K )
 
               for(int j =0;j<DistributionEncodeList[i].size();j++)
              {
-               fprintf(Output,"%lf	",imag(DistributionEncodeList[i][j]));
+               fprintf(Output,"%lf,",imag(DistributionEncodeList[i][j]));
              }
               fprintf(Output,"\n");
            }
