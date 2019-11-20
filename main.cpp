@@ -188,6 +188,7 @@ for(int i =0;i<argc;i++)
         if(argv[i+1]==NULL||argv[i+2]==NULL)
         {
            printf("PairwiseGenotype InputFile Outputfile \n");
+           printf("PairwiseGenotype -m InputFile Outputfile \n");
            return 0;
         }
 
@@ -216,6 +217,7 @@ for(int i =0;i<argc;i++)
         if(argv[i+1]==NULL||argv[i+2]==NULL)
         {
            printf("RBFEncode InputFile Outputfile [ComponentsNumber]\n");
+           printf("RBFEncode -m InputFile Outputfile [ComponentsNumber]\n");
            return 0;
         }
 
