@@ -99,5 +99,5 @@ N is the number of consider components. M = n\*m n is the number of samples and 
 
     -config   configPATH/config 
     
- If the config file and execute file are not locate in the same file directory, the path should be specified.  
+ If the config file and execute file are not locate in the same file directory, the path should be specified in the end of command.  
      
