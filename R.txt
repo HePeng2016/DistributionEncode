@@ -1,0 +1,19 @@
+N ：样本个数
+GeneN: 基因的个数
+P_value = 1:GeneN
+mydata = NULL
+read.table("test/exp.RBFEncode.c3.txt",head=F)->GeneRBF_
+mydata$x=c(1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4,4,4)
+GeneN=14382
+P_value=1:GeneN
+N = 28
+for  (J in 1: GeneN)
+{ 
+   if(var(GeneRBF_[ ((J-1)*N+1):((J)*N),1])<0.000001)
+   mydata$y=as.matrix(GeneRBF_[ ((J-1)*N+1):((J)*N),2:3])
+   else
+   mydata$y=as.matrix(GeneRBF_[ ((J-1)*N+1):((J)*N),])
+    
+    ocdModel <- manova(y~x,data=mydata);
+    P_value[J] = summary(ocdModel)$stats[1,6];
+}
