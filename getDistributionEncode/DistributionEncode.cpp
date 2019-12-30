@@ -44,7 +44,7 @@ void DistributionEncode::Vectorization(sp_mat & ConnectionMatrix, int N, std::ve
 
         Energy = ConnectionMatrix(clusterResult[i].IDArray[0],clusterResult[i].IDArray[1]);
         for( int n=0;n<N;n++)
-            DistributionEncodeList[clusterResult[i].IDArray[0]][n] = DistributionEncodeList[clusterResult[i].IDArray[0]][n]+exp(Energy*Image*(t_0+t_step*n));
+            DistributionEncodeList[clusterResult[i].IDArray[0]][n] = DistributionEncodeList[clusterResult[i].IDArray[0]][n]+exp(Energy*Image*(t_step*n));
 
         GroupCount[clusterResult[i].IDArray[0]]= GroupCount[clusterResult[i].IDArray[0]]+1;
      }
@@ -525,7 +525,11 @@ void DistributionEncode::Encode(mat&InputM,FILE * Output,int K )
 
            for(int  i=0;i<DistributionEncodeList.size();i++)
            {
-
+		   
+	      for(int j =0;j<DistributionEncodeList[i].size();j++)
+             {
+                fprintf(Output,"%lf,",real(DistributionEncodeList[i][j]));
+             }
               for(int j =0;j<DistributionEncodeList[i].size()-1;j++)
              {
                fprintf(Output,"%lf,",imag(DistributionEncodeList[i][j]));
