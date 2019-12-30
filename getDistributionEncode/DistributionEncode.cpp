@@ -113,6 +113,12 @@ void DistributionEncode::TableReadWithName(FILE *ip, std::vector< std::vector < 
 	 }
 }
 
+void DistribuitionEncode::IFFT(,File * Output)
+{
+ Output.resize(InputM.,InputM);	
+	cx_mat Z = ifft(cx_mat Y);  
+}
+
 
 void DistributionEncode::GenoType(FILE * Input,FILE * Output)
   {
