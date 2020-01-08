@@ -42,10 +42,7 @@ void DistributionEncode::Vectorization(sp_mat & ConnectionMatrix, int N, std::ve
       break;
     }
 
-    for(int i=0;i<N;i++)
-    {
-
-    }
+ 
     for(int i=0;i<clusterResult.size();i++)
     {
 
