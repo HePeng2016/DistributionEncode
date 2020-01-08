@@ -94,6 +94,7 @@ N is the number of consider components. M = n\*m n is the number of samples and 
       Tolerance = 0.01
       VectorSize =   512
       RBFThreshold = 0.1
+      Diffusion = 32
       
   ”VectorSize“  is the size of the encoding vector, ”tolerance“ is the resolution of orthogonal basis function. RBF Threshold is used to select the components, if the "ComponentsNumber" parameter is not specified in "RBFEncode" command,  the rato of eigenvalue for selected component and the sum of all eigenvalues should be above this value. 
 
