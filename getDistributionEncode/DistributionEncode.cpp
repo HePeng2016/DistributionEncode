@@ -1,6 +1,90 @@
 #include "DistributionEncode.h"
 
 
+void DistributionEncode::Vectorization_bins(sp_mat & ConnectionMatrix, int N, std::vector< std::vector< std::complex<double> > > &DistributionEncodeList)
+{
+    std::vector <unsigned int> GroupCount;
+    DistributionEncodeList.resize(ConnectionMatrix.n_rows);
+    GroupCount.resize(ConnectionMatrix.n_rows);
+    int PN;
+    double GaussianSum =0;
+    double Energy =0;
+    std::complex<double> Image(0,1);
+    double t_0 = 0.01;
+    double t_step=PI*2/(N);// sqrt(N*tolerance);
+    std::vector <double> Sum;
+
+
+    for(int i=0;i<(ConnectionMatrix.n_rows);i++)
+    {
+        DistributionEncodeList[i].resize(N);
+        GroupCount[i]=0;
+
+        for(int j =0;j<N;j++)
+        {
+          DistributionEncodeList[i][j]=0.0;
+        }
+
+    }
+
+    for(PN=0;PN<N;PN++)
+    {
+      if( exp(-pow((PN*2*PI/Diffusion),2)/2)<0.000001)
+      break;
+    }
+
+     double  scale =0;
+
+     for(int i = 0;i<PN;i++)
+    {
+      scale = scale+exp(-pow((i*2*PI/Diffusion),2)/2);
+    }
+
+     scale = scale*2-1;
+
+
+    for(int i=0;i<clusterResult.size();i++)
+    {
+
+
+
+
+        if(clusterResult[i].IDArray.size()<2)
+          continue;
+
+
+        Energy = ConnectionMatrix(clusterResult[i].IDArray[0],clusterResult[i].IDArray[1]);
+        DistributionEncodeList[clusterResult[i].IDArray[0]][round(Energy/tolerance)+Diffusion] = DistributionEncodeList[clusterResult[i].IDArray[0]][round(Energy/tolerance)+Diffusion]+1.0;
+
+        for( int n=1;n<PN;n++)
+        {
+        	   double amplitude = exp(-pow((n*2*PI/Diffusion),2)/2);
+             if( round(Energy/tolerance)+n+Diffusion <N )
+        		 DistributionEncodeList[clusterResult[i].IDArray[0]][round(Energy/tolerance)+n+Diffusion] = DistributionEncodeList[clusterResult[i].IDArray[0]][round(Energy/tolerance)+n+Diffusion]+amplitude;
+             if( round(Energy/tolerance)-n+Diffusion >0 )
+             DistributionEncodeList[clusterResult[i].IDArray[0]][round(Energy/tolerance)-n+Diffusion] = DistributionEncodeList[clusterResult[i].IDArray[0]][round(Energy/tolerance)-n+Diffusion]+amplitude;
+
+        }
+        GroupCount[clusterResult[i].IDArray[0]]= GroupCount[clusterResult[i].IDArray[0]]+1;
+     }
+
+
+     for(int i=0;i<(ConnectionMatrix.n_rows);i++)
+     {
+
+         for( int n=0;n<N;n++)
+         {
+            DistributionEncodeList[i][n] = DistributionEncodeList[i][n]/( scale*((double)GroupCount[i])+0.0000000000000001);
+         }
+
+     }
+
+}
+
+
+
+
+
 
 
 void DistributionEncode::Vectorization(sp_mat & ConnectionMatrix, int N, std::vector< std::vector< std::complex<double> > > &DistributionEncodeList)
@@ -16,7 +100,7 @@ void DistributionEncode::Vectorization(sp_mat & ConnectionMatrix, int N, std::ve
     double Energy =0;
     std::complex<double> Image(0,1);
     double t_0 = 0.01;
-    double t_step=3.1415926*2/(N);// sqrt(N*tolerance);
+    double t_step=PI*2/(N);// sqrt(N*tolerance);
     std::vector <double> Sum;
 
 
@@ -42,7 +126,7 @@ void DistributionEncode::Vectorization(sp_mat & ConnectionMatrix, int N, std::ve
       break;
     }
 
- 
+
     for(int i=0;i<clusterResult.size();i++)
     {
 
@@ -311,15 +395,16 @@ void DistributionEncode::PairwiseEncode(mat&InputM,FILE * Output,int K)
               EnergyMatrix(( InputM(i,0)-1),(InputM(i,1)-1))=InputM(i,n);
            }
            std::vector< std::vector< std::complex<double> > > DistributionEncodeList;
-           Vectorization(EnergyMatrix,K,DistributionEncodeList);
-
-
-            for(int  i=0;i<DistributionEncodeList.size();i++)
+           if(HistType==Cosine)
            {
-             for(int j =0;j<DistributionEncodeList[i].size();j++)
+
+              Vectorization(EnergyMatrix,K,DistributionEncodeList);
+              for(int  i=0;i<DistributionEncodeList.size();i++)
              {
-                 TempY[j]=DistributionEncodeList[i][j];
-             }
+                 for(int j =0;j<DistributionEncodeList[i].size();j++)
+                 {
+                    TempY[j]=DistributionEncodeList[i][j];
+                 }
                  TempY=fft(TempY);
 
                 for(int j =0;j<DistributionEncodeList[i].size()-1;j++)
@@ -330,8 +415,29 @@ void DistributionEncode::PairwiseEncode(mat&InputM,FILE * Output,int K)
                    else
                    OutputM(i,j)= 0;
                 }
-           }
+             }
+          }
 
+         if(HistType==Bin)
+         {
+
+              Vectorization_bins(EnergyMatrix,K,DistributionEncodeList);
+
+               for(int  i=0;i<DistributionEncodeList.size();i++)
+               {
+                 for(int j =0;j<DistributionEncodeList[i].size();j++)
+                 {
+                   double value = real(DistributionEncodeList[i][j]);
+
+                   if(value>0.000000001)
+                   OutputM(i,j)= sqrt(value);
+                   else
+                   OutputM(i,j)= 0;
+
+                 }
+               }
+
+         }
 
 
 
@@ -413,12 +519,12 @@ void DistributionEncode::RBFEncode( mat&InputM,FILE * Output,int K,int CompsN )
            }
            std::vector< std::vector< std::complex<double> > > DistributionEncodeList;
 
-           Vectorization(EnergyMatrix,K,DistributionEncodeList);
-
-
-
-           for(int  i=0;i<DistributionEncodeList.size();i++)
+           if(HistType==Cosine)
            {
+             Vectorization(EnergyMatrix,K,DistributionEncodeList);
+
+             for(int  i=0;i<DistributionEncodeList.size();i++)
+             {
                 for(int j =0;j<DistributionEncodeList[i].size();j++)
                 {
                    TempY[j]=DistributionEncodeList[i][j];
@@ -433,7 +539,28 @@ void DistributionEncode::RBFEncode( mat&InputM,FILE * Output,int K,int CompsN )
                    else
                    OutputM(i,j)= 0;
                 }
+             }
            }
+
+          if(HistType==Bin)
+          {
+
+              Vectorization_bins(EnergyMatrix,K,DistributionEncodeList);
+              for(int  i=0;i<DistributionEncodeList.size();i++)
+             {
+               for(int j =0;j<DistributionEncodeList[i].size();j++)
+               {
+                   double value = real(DistributionEncodeList[i][j]);
+
+                   if(value>0.000000001)
+                   OutputM(i,j)= sqrt(value);
+                   else
+                   OutputM(i,j)= 0;
+
+                }
+             }
+
+          }
 
 
 
@@ -592,9 +719,10 @@ void DistributionEncode::Encode(mat&InputM,FILE * Output,int K )
 
            std::vector< std::vector< std::complex<double> > > DistributionEncodeList;
 
-           Vectorization(AttributesMatrix,K,DistributionEncodeList);
 
-
+       if(HistType==Cosine)
+      {
+          Vectorization(AttributesMatrix,K,DistributionEncodeList);
 
            for(int  i=0;i<DistributionEncodeList.size();i++)
            {
@@ -614,6 +742,28 @@ void DistributionEncode::Encode(mat&InputM,FILE * Output,int K )
                fprintf(Output,"\n");
 
            }
+      }
+
+
+       if(HistType==Bin)
+       {
+
+           Vectorization_bins(AttributesMatrix,K,DistributionEncodeList);
+
+           for(int  i=0;i<DistributionEncodeList.size();i++)
+           {
+
+             for(int j =0;j<DistributionEncodeList[i].size()-1;j++)
+             {
+                fprintf(Output,"%lf,",DistributionEncodeList[i][j]);
+             }
+               fprintf(Output,"%lf  ",DistributionEncodeList[i][DistributionEncodeList[i].size()-1]);
+               fprintf(Output,"\n");
+           }
+       }
+
+
+
 
       }
 
